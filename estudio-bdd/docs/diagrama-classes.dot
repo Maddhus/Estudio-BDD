@@ -1,0 +1,62 @@
+digraph Dominio {
+  rankdir=LR;
+  graph [fontname="Helvetica", nodesep=0.5, ranksep=1.0, pad=0.3, labelloc=t, fontsize=18,
+         label="Estúdio BDD — diagrama de classes do domínio (pacote model)"];
+  node  [shape=plain, fontname="Helvetica", fontsize=11];
+  edge  [fontname="Helvetica", fontsize=10, color="#334155"];
+
+  Projeto [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+      <tr><td bgcolor="#dbeafe"><b>Projeto</b></td></tr>
+      <tr><td align="left">id : Long<br align="left"/>nome : String  {único}<br align="left"/>descricao : String<br align="left"/>contextoDominio : String<br align="left"/>dataCriacao : LocalDateTime<br align="left"/></td></tr>
+    </table>>];
+
+  Usuario [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+      <tr><td bgcolor="#dbeafe"><b>Usuario</b></td></tr>
+      <tr><td align="left">id : Long<br align="left"/>nome : String<br align="left"/>email : String  {único}<br align="left"/></td></tr>
+    </table>>];
+
+  Historia [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+      <tr><td bgcolor="#dbeafe"><b>HistoriaUsuario</b></td></tr>
+      <tr><td align="left">id : Long<br align="left"/>titulo : String  {único no projeto}<br align="left"/>papel : String  (Como…)<br align="left"/>objetivo : String  (quero…)<br align="left"/>beneficio : String  (para…)<br align="left"/>prioridade : Prioridade<br align="left"/>dataCriacao : LocalDateTime<br align="left"/>dataAtualizacao : LocalDateTime<br align="left"/></td></tr>
+    </table>>];
+
+  Cenario [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+      <tr><td bgcolor="#dbeafe"><b>Cenario</b></td></tr>
+      <tr><td align="left">id : Long<br align="left"/>titulo : String  {único na história}<br align="left"/>posicao : int<br align="left"/>origem : OrigemCenario<br align="left"/></td></tr>
+    </table>>];
+
+  Passo [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+      <tr><td bgcolor="#dbeafe"><b>Passo</b></td></tr>
+      <tr><td align="left">id : Long<br align="left"/>tipo : TipoPasso<br align="left"/>texto : String<br align="left"/>posicao : int<br align="left"/></td></tr>
+    </table>>];
+
+  Sugestao [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+      <tr><td bgcolor="#dbeafe"><b>Sugestao</b></td></tr>
+      <tr><td align="left">id : Long<br align="left"/>ferramenta : String<br align="left"/>prompt : String<br align="left"/>conteudo : String<br align="left"/>decisao : DecisaoSugestao<br align="left"/>motivoRejeicao : MotivoRejeicao<br align="left"/>justificativa : String<br align="left"/>dataRegistro : LocalDateTime<br align="left"/>dataDecisao : LocalDateTime<br align="left"/></td></tr>
+    </table>>];
+
+  Enums [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="#f8fafc">
+      <tr><td bgcolor="#e2e8f0"><b>«enumeration»</b></td></tr>
+      <tr><td align="left"><b>Prioridade</b>: ALTA, MEDIA, BAIXA<br align="left"/><b>OrigemCenario</b>: HUMANO, SUGESTAO_IA<br align="left"/><b>TipoPasso</b>: DADO, QUANDO, ENTAO, E, MAS<br align="left"/><b>DecisaoSugestao</b>: PENDENTE, ACEITA, REJEITADA<br align="left"/><b>MotivoRejeicao</b>: INCORRETA, GENERICA, DUPLICADA,<br align="left"/>                            FORA_DO_ESCOPO, OUTRO<br align="left"/></td></tr>
+    </table>>];
+
+  Projeto -> Historia [taillabel="1", headlabel="0..*", label="historias", arrowhead=vee];
+  Historia -> Usuario [taillabel="0..*", headlabel="1", label="autor", arrowhead=vee];
+
+  Historia -> Cenario [dir=both, arrowtail=diamond, arrowhead=vee, taillabel="1", headlabel="0..*", label="cenarios\n(composição)"];
+  Cenario -> Passo   [dir=both, arrowtail=diamond, arrowhead=vee, taillabel="1", headlabel="1..*", label="passos\nordenados por posição\n(composição)"];
+  Historia -> Sugestao [dir=both, arrowtail=diamond, arrowhead=vee, taillabel="1", headlabel="0..*", label="sugestoes\n(composição)"];
+
+  Sugestao -> Usuario [taillabel="0..*", headlabel="1", label="registradaPor", arrowhead=vee];
+  Sugestao -> Usuario [taillabel="0..*", headlabel="0..1", label="decididaPor", arrowhead=vee, style=dashed];
+
+  {rank=same; Passo; Sugestao}
+  Sugestao -> Enums [style=invis];
+}
