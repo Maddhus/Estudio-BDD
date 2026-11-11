@@ -1,0 +1,100 @@
+API: http://localhost:8080/api | Ana = usuário 1 | Bruno = usuário 2 | execução 1794418997
+
+== 1. Projeto e história ==
+  ok     projeto válido é criado -> HTTP 201
+  ok     nome de projeto repetido é rejeitado -> HTTP 409
+         mensagem da API: Já existe um projeto chamado \
+  ok     história válida é criada -> HTTP 201
+  ok     o autor da história é Ana
+  ok     título repetido no mesmo projeto é rejeitado -> HTTP 409
+         mensagem da API: Já existe uma história com o título \
+  ok     narrativa incompleta (sem benefício) é rejeitada -> HTTP 400
+  ok     a resposta indica o campo beneficio
+  ok     sem cabeçalho X-Usuario-Id a criação é recusada -> HTTP 401
+  ok     usuário inexistente no cabeçalho é recusado -> HTTP 401
+
+== 2. Cenários (regra 2) ==
+  ok     cenário válido é criado -> HTTP 201
+  ok     cenário sem passo Então é rejeitado -> HTTP 422
+         mensagem da API: Cenário inválido: O cenário precisa ter ao menos um passo Então.
+  ok     cenário sem passo Quando é rejeitado -> HTTP 422
+         mensagem da API: Cenário inválido: O cenário precisa ter ao menos um passo Quando.
+  ok     cenário fora de ordem é rejeitado -> HTTP 422
+         mensagem da API: Cenário inválido: O passo 2 (Dado) está fora de ordem: a sequência deve ser Dado → Quando → Então.
+  ok     cenário iniciado por E é rejeitado -> HTTP 422
+         mensagem da API: Cenário inválido: O passo 1 (E) não pode iniciar o cenário: E e Mas continuam o tipo anterior.
+  ok     cenário iniciado por Mas é rejeitado -> HTTP 422
+  ok     título de cenário repetido na história é rejeitado -> HTTP 409
+         mensagem da API: Já existe um cenário com o título \
+
+== 3. Passos mantidos na ordem correta após edição ==
+  ok     passo E inserido na posição 2 -> HTTP 201
+  ok     ordem dos tipos após a inserção = DADO,E,QUANDO,ENTAO
+  ok     passo Dado inserido depois do Quando é rejeitado -> HTTP 422
+         mensagem da API: Cenário inválido: O passo 4 (Dado) está fora de ordem: a sequência deve ser Dado → Quando → Então.
+  ok     ordem preservada após a tentativa rejeitada = DADO,E,QUANDO,ENTAO
+  ok     edição do cenário com novos passos -> HTTP 200
+  ok     tipos na ordem enviada = DADO,DADO,QUANDO,ENTAO
+  ok     textos na ordem enviada = primeiro,segundo,terceiro,quarto
+  ok     excluir o único passo Então é rejeitado -> HTTP 422
+         mensagem da API: Cenário inválido: O cenário precisa ter ao menos um passo Então.
+  ok     excluir um passo Dado é permitido (cenário continua válido) -> HTTP 204
+  ok     tipos após a exclusão = DADO,QUANDO,ENTAO
+
+== 4. Autoria (regra 3): Bruno não é o autor ==
+  ok     edição da história por não autor é bloqueada -> HTTP 403
+         mensagem da API: Somente o autor da história (Ana Souza) pode alterá-la ou excluí-la, incluindo seus cenários e passos.
+  ok     exclusão da história por não autor é bloqueada -> HTTP 403
+  ok     criação de cenário por não autor é bloqueada -> HTTP 403
+  ok     edição de cenário por não autor é bloqueada -> HTTP 403
+  ok     exclusão de cenário por não autor é bloqueada -> HTTP 403
+  ok     exclusão de passo por não autor é bloqueada -> HTTP 403
+  ok     exclusão sem identificação é recusada -> HTTP 401
+
+== 5. Sugestões (regra 4) e exportação (regra 5) ==
+  ok     sugestão é registrada -> HTTP 201
+  ok     a sugestão nasce PENDENTE
+  ok     exportação bloqueada com sugestão pendente -> HTTP 422
+         mensagem da API: A história não pode ser exportada: há 1 sugestão(ões) pendente(s). Aceite ou rejeite todas antes de exportar.
+  ok     listar sugestões pendentes -> HTTP 200
+  ok     a lista contém a sugestão pendente
+  ok     rejeição sem motivo é bloqueada -> HTTP 422
+         mensagem da API: A rejeição exige um motivo (INCORRETA, GENERICA, DUPLICADA, FORA_DO_ESCOPO ou OUTRO).
+  ok     rejeição com motivo é aceita -> HTTP 200
+  ok     a sugestão ficou REJEITADA com o motivo
+  ok     aceitar sugestão já decidida é bloqueado -> HTTP 409
+         mensagem da API: A sugestão já foi decidida (REJEITADA) e não pode ser alterada.
+  ok     rejeitar sugestão já decidida é bloqueado -> HTTP 409
+  ok     aceitação de sugestão pendente -> HTTP 200
+  ok     a sugestão ficou ACEITA
+  ok     aceitar NÃO alterou os cenários (continua 1 cenário)
+  ok     não restam sugestões pendentes = []
+  ok     exportação liberada (cenário e nenhuma pendência) -> HTTP 200
+  ok     o arquivo começa com # language: pt
+  ok     o arquivo traz a palavra-chave Funcionalidade
+         (arquivo salvo em docs/evidencias/exportado-pelo-sistema.feature)
+  ok     segunda história criada (sem cenários) -> HTTP 201
+  ok     exportação bloqueada sem cenários -> HTTP 422
+         mensagem da API: A história não pode ser exportada: cadastre ao menos um cenário.
+
+== 6. Consulta e resumo do projeto (regras 6 e 7) ==
+  ok     consulta das histórias do projeto -> HTTP 200
+  ok     história 1 tem 1 cenário
+  ok     nenhuma sugestão pendente na história 1
+  ok     filtro ALTA traz o Login de cliente
+  ok     filtro ALTA não traz a Busca sem cenários
+  ok     resumo do projeto -> HTTP 200
+  ok     total de histórias = 2
+  ok     cenários por origem (HUMANO = 1)
+  ok     cenários por origem (SUGESTAO_IA = 0)
+  ok     sugestões aceitas = 1
+  ok     sugestões rejeitadas = 1
+  ok     sugestões pendentes = 0
+  ok     motivo de rejeição mais frequente
+
+== 7. CORS: só a origem da SPA é liberada ==
+  ok     origem http://localhost:5173 recebe Access-Control-Allow-Origin
+  ok     outra origem NÃO recebe Access-Control-Allow-Origin
+
+Resultado: 67 verificações ok, 0 falhas.
+Pendente (manual): reiniciar a API e conferir que o projeto "Roteiro 1794418997" continua listado em GET http://localhost:8080/api/projetos.

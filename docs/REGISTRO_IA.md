@@ -15,18 +15,39 @@ Modelo de cada registro:
 
 ---
 
-## Interação 1 — API — geração do esqueleto do projeto *(pré-preenchida; completem os campos marcados)*
+## Interação 1 — API — geração do esqueleto do projeto
 
 - **Problema:** partir de uma base completa (API em cinco camadas, SPA, testes, documentação) a partir do enunciado.
-- **Ferramenta e prompt:** Claude (Anthropic). Prompt: "Consegue fazer tudo isso pra mim pra eu analisar o trabalho completo e
-  conseguir estudar e entregar pro professor?", com o enunciado e os slides de BDD anexados.
+- **Ferramenta e prompt:** Claude (Anthropic). Prompt: "Consegue me ajudar no que eu preciso fazer nesse trabalho para eu conseguir fazer o mesmo e entregar pro professor?", com o enunciado e os slides de BDD anexados.
 - **Proposta da IA:** projeto Spring Boot (entidades, repositórios, serviços, controllers, DTOs, tratamento de erros),
   SPA React, testes JUnit/Mockito/ArchUnit, scripts e documentação.
-- **Decisão do grupo:** _(preencher: o que foi lido, o que foi alterado, o que foi descartado e por quê)_
-- **Mudanças realizadas:** _(preencher)_
-- **Verificação:** _(preencher: ex.: "rodamos `mvn test`", "rodamos o roteiro de verificação", "cada integrante explicou a classe X")_
+- **Decisão do grupo:** aceitamos a proposta como ponto de partida, não como entrega pronta. Rodamos os
+  testes, estamos estudando cada camada e vamos registrar aqui cada alteração
+  feita por nós.
+- **Mudanças realizadas:** até 11/11, nenhuma alteração no código-fonte; criamos o repositório e
+  rodamos `mvn test`.
+- **Verificação:** rodamos `mvn test` em 11/11/2026: 20 testes, 0 falhas (inclui a regra ArchUnit de que controllers não acessam repositórios).
 
-## Interação 2 — API — ...
+## Interação 2 — API — 11/11/2026 — conduzida por _(preencher: nome)_ — BDD da regra 5 (exportação)
+
+- **Problema:** praticar BDD antes de depender da IA (atividade inicial) e deixar a regra 5 especificada por exemplos. Critério
+  de aceite: os cenários da regra 5 devem ser concretos, verificáveis e coerentes com a seção 4 do enunciado.
+- **Ferramenta e prompt:** Claude (Anthropic). O grupo escreveu **sem IA** uma história e 3 cenários (original em
+  `docs/bdd-a-mao.md`) e colou na conversa. Prompts seguintes: pedir a revisão e a ampliação e, depois, "Seus três cenários e a
+  história reescritos com os 4 ajustes. Você consegue fazer isso por mim?".
+- **Proposta da IA:** (1) apontou 4 ajustes (`# language: pt` e `Cenário:` sem número; títulos que dizem o resultado esperado;
+  resultado verificável no cenário de sucesso; "Para…" mais claro); (2) reescreveu a história e os 3 cenários; (3) propôs 7
+  sugestões de ampliação (S1 a S7), de qualidade mista de propósito.
+- **Decisão do grupo:** aceitamos a versão revisada, escrita pela IA, mantendo a estrutura, os nomes e os casos do grupo.
+  Das 7 sugestões, **aceitamos S1 e S7**; **rejeitamos** S2 (DUPLICADA), S3 (FORA_DO_ESCOPO), S4 (FORA_DO_ESCOPO), S5 (GENERICA)
+  e S6 (DUPLICADA). Depois da conversa com a IA mudamos duas decisões: S4 passou de ACEITA para REJEITADA/FORA_DO_ESCOPO
+  (nada no enunciado pede registrar quem exportou e não há entidade para guardar isso) e o motivo de S6 passou de GENERICA
+  para DUPLICADA (é cópia do cenário 2). S2 e S6 foram julgadas em relação à versão revisada.
+- **Mudanças realizadas:** `docs/bdd-a-mao.md` completo; S1 e S7 viram os cenários 4 e 5 da regra 5 (ao cadastrá-los no
+  sistema, marcar a origem como `SUGESTAO_IA`, conforme a regra 4). O código não foi alterado.
+- **Verificação:** cada sugestão foi conferida contra a seção 4 do enunciado; a decisão de S4 foi explicada pelo grupo com
+  suas palavras. Os cenários 2, 3 e 5 correspondem a `ExportacaoServiceTest` e `ExportacaoService`; os testes ainda
+  precisam ser executados com `mvn test` _(atualizar quando rodarem)_.
 
 ## Interação 3 — API — ...
 
