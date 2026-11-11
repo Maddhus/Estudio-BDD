@@ -189,7 +189,7 @@ Funcionalidade: Exportação de história
 | 3 (pendente) | `ExportacaoServiceTest.exportacaoBloqueadaComSugestaoPendente`; regra em `ExportacaoService.exportar` |
 | 5 (as duas violações) | `ExportacaoService.exportar` verifica **os cenários primeiro**, então a mensagem é a de falta de cenário |
 
-Os testes acima ainda não foram executados (`mvn test` pendente neste momento); confirmar quando rodarem.
+Executados em 11/11/2026 com mvn test: 20 testes, 0 falhas.git
 
 ## O que foi útil e o que foi genérico
 

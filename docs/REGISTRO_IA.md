@@ -24,11 +24,10 @@ Modelo de cada registro:
 - **Decisão do grupo:** aceitamos a proposta como ponto de partida, não como entrega pronta. Rodamos os
   testes, estamos estudando cada camada e vamos registrar aqui cada alteração
   feita por nós.
-- **Mudanças realizadas:** até 11/11, nenhuma alteração no código-fonte; criamos o repositório e
-  rodamos `mvn test`.
-- **Verificação:** rodamos `mvn test` em 11/11/2026: 20 testes, 0 falhas (inclui a regra ArchUnit de que controllers não acessam repositórios).
+- **Mudanças realizadas:** em 11/11 removemos a pasta duplicada `estudio-bdd/` do repositório e alteramos `frontend/vite.config.js` (`host` e `allowedHosts`, alteração proposta pela IA) para abrir a SPA pelo endereço do GitHub Codespaces; o restante do código-fonte não foi alterado.
+- **Verificação:** rodamos `mvn test` em 11/11/2026: 20 testes, 0 falhas (inclui a regra ArchUnit de que controllers não acessam repositórios); rodamos `scripts/roteiro-verificacao.sh`: 67 verificações ok, 0 falhas; reiniciamos a API e os 3 projetos continuaram no banco; abrimos a SPA no Codespaces e testamos bloqueio de exclusão, erro de cenário e liberação da exportação (prints em `docs/evidencias/`)..
 
-## Interação 2 — API — 11/11/2026 — conduzida por _(preencher: nome)_ — BDD da regra 5 (exportação)
+## Interação 2 — API — 11/11/2026 — conduzida por Victor — BDD da regra 5 (exportação)
 
 - **Problema:** praticar BDD antes de depender da IA (atividade inicial) e deixar a regra 5 especificada por exemplos. Critério
   de aceite: os cenários da regra 5 devem ser concretos, verificáveis e coerentes com a seção 4 do enunciado.
@@ -46,8 +45,7 @@ Modelo de cada registro:
 - **Mudanças realizadas:** `docs/bdd-a-mao.md` completo; S1 e S7 viram os cenários 4 e 5 da regra 5 (ao cadastrá-los no
   sistema, marcar a origem como `SUGESTAO_IA`, conforme a regra 4). O código não foi alterado.
 - **Verificação:** cada sugestão foi conferida contra a seção 4 do enunciado; a decisão de S4 foi explicada pelo grupo com
-  suas palavras. Os cenários 2, 3 e 5 correspondem a `ExportacaoServiceTest` e `ExportacaoService`; os testes ainda
-  precisam ser executados com `mvn test` _(atualizar quando rodarem)_.
+  suas palavras. Os cenários 2, 3 e 5 correspondem a `ExportacaoServiceTest` e `ExportacaoService`; Os cenários 1 a 4 correspondem a testes de `ExportacaoServiceTest`; o cenário 5 está implementado em `ExportacaoService.exportar`, que checa os cenários primeiro, e não tem teste próprio. `mvn test` em 11/11/2026: 20 testes, 0 falhas.
 
 ## Interação 3 — API — ...
 
