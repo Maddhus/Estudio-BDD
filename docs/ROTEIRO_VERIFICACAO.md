@@ -1,9 +1,5 @@
 # Roteiro de verificação
 
-Como usar: com banco e API no ar, rode `./scripts/roteiro-verificacao.sh | tee docs/evidencias/execucao-api.txt` e
-complete a coluna **Resultado observado** com o que realmente aconteceu (o script imprime `ok`/`FALHA` por verificação
-e a mensagem devolvida pela API). Os itens de SPA, de reinício e de `mvn test` são manuais: anexem capturas de tela em
-`docs/evidencias/`.
 
 | # | Verificação | Entrada | Resultado esperado | Resultado observado |
 |---|---|---|---|---|
