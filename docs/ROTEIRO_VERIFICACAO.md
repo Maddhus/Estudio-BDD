@@ -1,4 +1,4 @@
-# Roteiro de verificação (seção 13 do enunciado)
+# Roteiro de verificação
 
 Como usar: com banco e API no ar, rode `./scripts/roteiro-verificacao.sh | tee docs/evidencias/execucao-api.txt` e
 complete a coluna **Resultado observado** com o que realmente aconteceu (o script imprime `ok`/`FALHA` por verificação
@@ -7,28 +7,30 @@ e a mensagem devolvida pela API). Os itens de SPA, de reinício e de `mvn test` 
 
 | # | Verificação | Entrada | Resultado esperado | Resultado observado |
 |---|---|---|---|---|
-| 1a | História válida | `POST /projetos/{id}/historias` (Ana) com título, papel, objetivo, benefício e prioridade | 201; autor = Ana | _(preencher)_ |
-| 1b | Título repetido no projeto | Mesmo título, mesmo projeto | 409 com mensagem de título repetido | |
-| 1c | Narrativa incompleta | História sem `beneficio` | 400, erro no campo `beneficio` | |
-| 2a | Cenário válido | Dado + Quando + Então (+ E) | 201; passos numerados 1..n | |
-| 2b | Sem Quando | Dado + Então | 422 "precisa ter ao menos um passo Quando" | |
-| 2c | Sem Então | Dado + Quando | 422 "precisa ter ao menos um passo Então" | |
-| 2d | Fora de ordem | Quando, Dado, Então | 422 "fora de ordem" | |
-| 2e | Iniciado por E (e por Mas) | E, Quando, Então | 422 "não pode iniciar o cenário" | |
-| 3 | Passos na ordem após edição | `POST /cenarios/{id}/passos` com `posicao`; `PUT /cenarios/{id}` com nova lista | Ordem e posições conforme enviado; inserção inválida rejeitada sem alterar o cenário | |
-| 4 | Bloqueio de não-autor | PUT/DELETE de história, cenário e passo com `X-Usuario-Id` de Bruno | 403 em todos | |
-| 5a | Registro de sugestão | `POST /historias/{id}/sugestoes` | 201; `decisao = PENDENTE` | |
-| 5b | Aceitação | `POST /sugestoes/{id}/aceitar` | 200; `ACEITA`; **cenários inalterados** | |
-| 5c | Rejeição com motivo | `POST /sugestoes/{id}/rejeitar` com `motivo` | 200; `REJEITADA` com o motivo | |
-| 5d | Rejeição sem motivo | Corpo sem `motivo` | 422; sugestão continua `PENDENTE` | |
-| 6 | Sugestão já decidida | Aceitar/rejeitar de novo | 409 | |
-| 7a | Exportação bloqueada sem cenários | `GET /historias/{id}/feature` | 422 | |
-| 7b | Exportação bloqueada com pendente | idem, com sugestão `PENDENTE` | 422 | |
-| 7c | `.feature` correto | idem, com cenário e sem pendências | 200; começa com `# language: pt`; confere com `docs/exemplo-formato.feature` | |
-| 8 | Resumo coerente | `GET /projetos/{id}/resumo` e `.../historias` | Totais iguais aos dados cadastrados (conferir um a um) | |
-| 9 | Persistência | Reiniciar a API (sem `docker compose down -v`) e listar `GET /projetos` | Dados continuam lá | |
-| 10 | CORS | Requisição com `Origin: http://localhost:5173` e com outra origem | Só a primeira recebe `Access-Control-Allow-Origin` | |
-| 11 | `mvn test` | `mvn test` | Todos os testes passam, incluindo ArchUnit | |
-| 12 | Fluxo completo pela SPA | Criar história → cenários → registrar sugestão → aceitar/rejeitar → exportar `.feature` | Funciona; mensagens de erro da API aparecem na tela | |
+| # | Verificação | Entrada | Resultado esperado | Resultado observado |
+|---|---|---|---|---|
+| 1a | História válida | `POST /projetos/{id}/historias` (Ana) com título, papel, objetivo, benefício e prioridade | 201; autor = Ana | HTTP 201; o autor da história na resposta é Ana. Igual ao esperado. |
+| 1b | Título repetido no projeto | Mesmo título, mesmo projeto | 409 com mensagem de título repetido | HTTP 409; mensagem da API: "Já existe uma história com o título \…" (o script corta a mensagem na primeira aspa). Igual ao esperado. |
+| 1c | Narrativa incompleta | História sem `beneficio` | 400, erro no campo `beneficio` | HTTP 400; a resposta indica o campo `beneficio`. Igual ao esperado. |
+| 2a | Cenário válido | Dado + Quando + Então (+ E) | 201; passos numerados 1..n | Posições 1..n: no GET /api/historias/1/cenarios os passos de cada cenário vieram com posicao 1, 2, 3, 4, na ordem Dado, Quando, Então, E (a posição do próprio cenário é um campo separado). Igual ao esperado. |
+| 2b | Sem Quando | Dado + Então | 422 "precisa ter ao menos um passo Quando" | HTTP 422; mensagem da API: "Cenário inválido: O cenário precisa ter ao menos um passo Quando." Igual ao esperado. |
+| 2c | Sem Então | Dado + Quando | 422 "precisa ter ao menos um passo Então" | HTTP 422; mensagem da API: "Cenário inválido: O cenário precisa ter ao menos um passo Então." Igual ao esperado. |
+| 2d | Fora de ordem | Quando, Dado, Então | 422 "fora de ordem" | HTTP 422; mensagem da API: "Cenário inválido: O passo 2 (Dado) está fora de ordem: a sequência deve ser Dado → Quando → Então." Igual ao esperado. |
+| 2e | Iniciado por E (e por Mas) | E, Quando, Então | 422 "não pode iniciar o cenário" | Iniciado por E: HTTP 422; mensagem da API: "Cenário inválido: O passo 1 (E) não pode iniciar o cenário: E e Mas continuam o tipo anterior." Iniciado por Mas: HTTP 422 (o script não imprime a mensagem). Igual ao esperado. |
+| 3 | Passos na ordem após edição | `POST /cenarios/{id}/passos` com `posicao`; `PUT /cenarios/{id}` com nova lista | Ordem e posições conforme enviado; inserção inválida rejeitada sem alterar o cenário | Passo E na posição 2: HTTP 201; ordem DADO,E,QUANDO,ENTAO. Passo Dado na posição 4 (depois do Quando): HTTP 422 ("O passo 4 (Dado) está fora de ordem…") e a ordem continuou DADO,E,QUANDO,ENTAO. `PUT` com nova lista: HTTP 200; tipos DADO,DADO,QUANDO,ENTAO e textos primeiro,segundo,terceiro,quarto, na ordem enviada. Também: excluir o único Então → HTTP 422; excluir um Dado → HTTP 204. Igual ao esperado. |
+| 4 | Bloqueio de não-autor | PUT/DELETE de história, cenário e passo com `X-Usuario-Id` de Bruno | 403 em todos | HTTP 403 nas 6 tentativas do Bruno (editar e excluir a história, criar, editar e excluir cenário, excluir passo). Mensagem: "Somente o autor da história (Ana Souza) pode alterá-la ou excluí-la, incluindo seus cenários e passos." Também: exclusão sem identificação → HTTP 401. Igual ao esperado. |
+| 5a | Registro de sugestão | `POST /historias/{id}/sugestoes` | 201; `decisao = PENDENTE` | HTTP 201; a sugestão nasceu com `decisao` = PENDENTE. Igual ao esperado. |
+| 5b | Aceitação | `POST /sugestoes/{id}/aceitar` | 200; `ACEITA`; **cenários inalterados** | HTTP 200; a sugestão ficou ACEITA; a história continuou com 1 cenário ("Login com senha correta"). Igual ao esperado. |
+| 5c | Rejeição com motivo | `POST /sugestoes/{id}/rejeitar` com `motivo` | 200; `REJEITADA` com o motivo | HTTP 200; a sugestão ficou REJEITADA com `motivoRejeicao` = FORA_DO_ESCOPO. Igual ao esperado. |
+| 5d | Rejeição sem motivo | Corpo sem `motivo` | 422; sugestão continua `PENDENTE` | HTTP 422; mensagem da API: "A rejeição exige um motivo (INCORRETA, GENERICA, DUPLICADA, FORA_DO_ESCOPO ou OUTRO)." A sugestão continuou PENDENTE: a rejeição seguinte, com motivo, deu HTTP 200 e não 409. Igual ao esperado. |
+| 6 | Sugestão já decidida | Aceitar/rejeitar de novo | 409 | Aceitar de novo: HTTP 409; mensagem da API: "A sugestão já foi decidida (REJEITADA) e não pode ser alterada." Rejeitar de novo: HTTP 409. Igual ao esperado. |
+| 7a | Exportação bloqueada sem cenários | `GET /historias/{id}/feature` | 422 | HTTP 422 para a história "Busca sem cenários"; mensagem da API: "A história não pode ser exportada: cadastre ao menos um cenário." Igual ao esperado. |
+| 7b | Exportação bloqueada com pendente | idem, com sugestão `PENDENTE` | 422 | HTTP 422; mensagem da API: "A história não pode ser exportada: há 1 sugestão(ões) pendente(s). Aceite ou rejeite todas antes de exportar." Igual ao esperado. |
+| 7c | `.feature` correto | idem, com cenário e sem pendências | 200; começa com `# language: pt`; confere com `docs/exemplo-formato.feature` | HTTP 200; o arquivo começa com `# language: pt` e traz `Funcionalidade: Login de cliente` (salvo em `docs/evidencias/exportado-pelo-sistema.feature`). Comparação com `docs/exemplo-formato.feature`: mesma estrutura (`# language: pt`, `Funcionalidade:`, `Como/Quero/Para` e `Cenário:` com passos Dado/Quando/Então indentados). Os textos diferem porque o arquivo exportado vem dos dados do próprio script de teste, e não do exemplo. |
+| 8 | Resumo coerente | `GET /projetos/{id}/resumo` e `.../historias` | Totais iguais aos dados cadastrados (conferir um a um) | Resumo: total de histórias = 2; cenários por origem HUMANO = 1 e SUGESTAO_IA = 0; sugestões ACEITA = 1, REJEITADA = 1, PENDENTE = 0; motivo de rejeição mais frequente FORA_DO_ESCOPO (1). Na consulta: a história 1 tem 1 cenário e 0 pendentes; o filtro `prioridade=ALTA` traz "Login de cliente" e não traz "Busca sem cenários". Os totais batem com o que o roteiro cadastrou. |
+| 9 | Persistência | Reiniciar a API (sem `docker compose down -v`) e listar `GET /projetos` | Dados continuam lá | A linha "Pendente (manual)" no fim do execucao-api.txt é o lembrete impresso pelo script, e esse passo foi feito: em 11/11 reiniciamos a API e o projeto "Roteiro 1794418997" continuou listado; em 15/11 repetimos (Ctrl+C e mvn spring-boot:run, sem docker compose down -v). O log da nova subida não trouxe a linha "Dados fictícios" e GET /api/projetos continuou listando os projetos criados em 14/11 (Biblioteca Escolar, Loja Virtual…). Evidência: docs/evidencias/persistencia-apos-reinicio.txt. Igual ao esperado. |
+| 10 | CORS | Requisição com `Origin: http://localhost:5173` e com outra origem | Só a primeira recebe `Access-Control-Allow-Origin` | A origem `http://localhost:5173` recebeu `Access-Control-Allow-Origin`; a origem `http://site-qualquer.exemplo` não recebeu. Igual ao esperado. |
+| 11 | `mvn test` | `mvn test` | Todos os testes passam, incluindo ArchUnit | Em 15/11/2026: 20 testes, 0 falhas, 0 erros, BUILD SUCCESS (inclui os 4 testes do ArquiteturaTest). Evidência: docs/evidencias/mvn-test.txt. Igual ao esperado. |
+| 12 | Fluxo completo pela SPA | Criar história → cenários → registrar sugestão → aceitar/rejeitar → exportar `.feature` | Funciona; mensagens de erro da API aparecem na tela | Fluxo percorrido na SPA, no GitHub Codespaces, com a API real; as mensagens de erro da API aparecem na tela. Evidências em `docs/evidencias/`: `spa-historia-com-cenarios.jpeg` (história com cenários cadastrados); `spa-erro-cenario.jpeg` (cenário inválido recusado, com a mensagem da API); `spa-sugestoes-pendente.jpeg` (painel de sugestões com uma sugestão pendente); `spa-exportacao-bloqueada-pendente.jpeg` (exportação bloqueada por sugestão pendente); `spa-liberacao-exportacao.jpeg` (exportação liberada depois de decidir as sugestões); `spa-bloqueio-exclusao.jpeg` (exclusão bloqueada para quem não é o autor). Igual ao esperado. |
 
-Atividade bônus: não implementada.
+

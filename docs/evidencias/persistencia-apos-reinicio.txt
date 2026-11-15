@@ -1,0 +1,1 @@
+[{"id":2,"nome":"Biblioteca Escolar","descricao":"Controle de empréstimos de livros de uma escola.","contextoDominio":"Bibliotecário: funcionário que registra empréstimos. Prazo de devolução: 7 dias corridos.","dataCriacao":"2026-11-14T19:05:00.071489"},{"id":1,"nome":"Loja Virtual","descricao
