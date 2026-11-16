@@ -47,5 +47,5 @@ SPA → controller → serviço → repositório → banco. Pacote base `br.edu.
 
 ## Erros que a IA já cometeu aqui (atualizar quando se repetir)
 
-- _(preencher conforme acontecer; ex.: "colocou regra no controller", "injetou repositório no controller",
-  "usou `@Autowired` em campo", "devolveu entidade JPA direto no JSON")_
+- Gerou o `vite.config.js` sem liberar o host do Codespaces (`allowedHosts`) e sem fixar a porta 5173; a SPA não abria e o CORS falhava. Corrigido em 11/11.
+- O `scripts/roteiro-verificacao.sh` testa o CORS com `http://localhost:5173`; rodá-lo com a API subida usando o `CORS_ORIGINS` do Codespace faz essa verificação falhar. Rodar o roteiro com a API sem `CORS_ORIGINS`.
