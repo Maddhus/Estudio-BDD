@@ -108,20 +108,15 @@ Funcionalidade: Exportação de história
 
 ## Passo 4 — Decisões do grupo
 
-Critério: cada sugestão foi julgada contra a **seção 4 do enunciado**, porque a IA não conhece o trabalho do grupo a fundo.
-
-A decisão de **S2 e S6 (duplicadas) foi tomada em relação à versão revisada** (3a). Em relação à versão **original** (passo 2),
-S2 seria ACEITA, pois resolvia o item 3 da revisão (resultado não verificável).
-
 | # | Decisão inicial do grupo | Decisão final | Motivo | Justificativa |
 |---|---|---|---|---|
-| S1 | ACEITA | **ACEITA** | – | _(rascunho; reescrever com suas palavras)_ Caso de borda que faltava: só sugestões pendentes bloqueiam, as já decididas não |
-| S2 | REJEITADA, DUPLICADA | **REJEITADA** | DUPLICADA | _(rascunho; reescrever)_ Já coberta pelo cenário 1 revisado (conteúdo do arquivo exportado) |
-| S3 | REJEITADA, FORA_DO_ESCOPO | **REJEITADA** | FORA_DO_ESCOPO | _(rascunho; reescrever)_ A regra 3 restringe só edição e exclusão; exportar não exige ser autor |
+| S1 | ACEITA | **ACEITA** | – | Aceitamos porque ela cobre um caso que não tínhamos escrito: as sugestões já decididas (uma aceita e outra rejeitada) não bloqueiam a exportação; só as pendentes bloqueiam (regra 5). |
+| S2 | REJEITADA, DUPLICADA | **REJEITADA** | DUPLICADA | Rejeitamos porque o que ela diz já está no cenário 1 da versão revisada: o arquivo exportado começa com "# language: pt" e traz "Funcionalidade:" e os cenários da história. |
+| S3 | REJEITADA, FORA_DO_ESCOPO | **REJEITADA** | FORA_DO_ESCOPO | Rejeitamos porque a regra 3 só limita editar e excluir; exportar não exige ser o autor (no roteiro, a exportação funcionou sem informar nenhum usuário). |
 | S4 | ACEITA | **REJEITADA** | FORA_DO_ESCOPO | Nada no enunciado pede para registrar quem exportou e em qual horário a exportação foi feita, além de não haver nenhuma entidade para guardar isso |
-| S5 | REJEITADA, GENERICA | **REJEITADA** | GENERICA | _(rascunho; reescrever)_ "História válida" e "resultado esperado" não são verificáveis |
+| S5 | REJEITADA, GENERICA | **REJEITADA** | GENERICA | Rejeitamos porque é genérica: "história válida" não diz qual história e "o resultado é o esperado" não diz qual é o resultado, então não dá para conferir num teste. |
 | S6 | REJEITADA, GENERICA | **REJEITADA** | DUPLICADA | É uma cópia do cenário 2 (o mesmo caso, com um Então mais fraco, sem a mensagem) |
-| S7 | ACEITA | **ACEITA** | – | _(rascunho; reescrever)_ Caso de borda: duas violações ao mesmo tempo; o sistema checa os cenários primeiro |
+| S7 | ACEITA | **ACEITA** | – | Aceitamos porque cobre as duas violações ao mesmo tempo (sem cenários e com sugestão pendente), que os cenários 2 e 3 só tratam separadamente; o sistema verifica os cenários primeiro, então a mensagem é a de falta de cenário. |
 
 **Decisões que mudaram depois da conversa com a IA:**
 
@@ -189,7 +184,7 @@ Funcionalidade: Exportação de história
 | 3 (pendente) | `ExportacaoServiceTest.exportacaoBloqueadaComSugestaoPendente`; regra em `ExportacaoService.exportar` |
 | 5 (as duas violações) | `ExportacaoService.exportar` verifica **os cenários primeiro**, então a mensagem é a de falta de cenário |
 
-Executados em 11/11/2026 com mvn test: 20 testes, 0 falhas.git
+Executados em 15/11/2026 com `mvn test`: 20 testes, 0 falhas (evidência: `docs/evidencias/mvn-test.txt`).
 
 ## O que foi útil e o que foi genérico
 

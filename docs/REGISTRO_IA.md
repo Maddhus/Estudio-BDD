@@ -18,7 +18,7 @@ Modelo de cada registro:
 ## Interação 1 — API — geração do esqueleto do projeto
 
 - **Problema:** partir de uma base completa (API em cinco camadas, SPA, testes, documentação) a partir do enunciado.
-- **Ferramenta e prompt:** Claude (Anthropic). Prompt: "Consegue me ajudar no que eu preciso fazer nesse trabalho para eu conseguir fazer o mesmo e entregar pro professor?", com o enunciado e os slides de BDD anexados.
+- **Ferramenta e prompt:** Claude (Anthropic). Prompt: "Consegue me ajudar me explicando o que eu preciso fazer nesse trabalho para eu conseguir fazer o mesmo e entregar pro professor?", com o enunciado e os slides de BDD anexados.
 - **Proposta da IA:** projeto Spring Boot (entidades, repositórios, serviços, controllers, DTOs, tratamento de erros),
   SPA React, testes JUnit/Mockito/ArchUnit, scripts e documentação.
 - **Decisão do grupo:** aceitamos a proposta como ponto de partida, não como entrega pronta. Rodamos os
