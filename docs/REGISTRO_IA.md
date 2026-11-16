@@ -83,7 +83,7 @@ Modelo de cada registro:
 - **Mudanças realizadas:** coluna "Resultado observado" do `docs/ROTEIRO_VERIFICACAO.md` e arquivos em `docs/evidencias/` (prints `spa-*.jpeg`, `mvn-test.txt`, `persistencia-apos-reinicio.txt`). O código não foi alterado.
 - **Verificação:** comparamos cada resultado com a coluna "Resultado esperado" do roteiro; `mvn test` em 15/11: 20 testes, 0 falhas.
 
-## Interação 7 — SPA — 15/11/2026 — conduzida por Maria Eduarda — sugestão de teste que não aparecia
+## Interação 7 — SPA — 15/11/2026 — conduzida por Victor — sugestão de teste que não aparecia
 
 - **Problema:** uma sugestão registrada pela SPA para teste não aparecia, e não sabíamos se tinha sido gravada.
 - **Ferramenta e prompt:** Claude (Anthropic). Prompt (trecho): "nao estou conseguindo ver o banco e a sugestão teste que fiz".
