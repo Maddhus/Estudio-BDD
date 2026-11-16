@@ -10,8 +10,8 @@ Projeto 2026/2 de Programação de Sistemas II. Entrega única: **17/11/2026** (
 
 | Nome | Matrícula | Responsabilidades principais |
 |---|---|---|
-| _(preencher)_ | | |
-| _(preencher)_ | | |
+| Victor Manuel Feitosa Pereira | 10755205 | Testes e roteiro de verificação; API e SPA |
+| Maria Eduarda Pacífico Cardoso | 10749966 | Testes e roteiro de verificação; API e SPA |
 
 ## Tecnologias
 
@@ -19,48 +19,29 @@ Projeto 2026/2 de Programação de Sistemas II. Entrega única: **17/11/2026** (
 - **Testes:** JUnit 5, Mockito, ArchUnit (rodam com `mvn test`, sem banco de dados).
 - **SPA:** React 18 + Vite (JavaScript), sem bibliotecas de roteamento ou de estado.
 
-## Como executar
+## Executar no GitHub Codespaces
 
-Pré-requisitos: JDK 17+, Maven 3.9+, Node 18+ e Docker (ou um PostgreSQL local).
+Roda a API e a SPA no navegador, sem instalar nada. Usem sempre o **mesmo** Codespace (github.com/codespaces).
 
-**1. Banco de dados (PostgreSQL)**
+1. **Banco** (terminal 1, na raiz do projeto): `docker compose up -d`
 
-```bash
-docker compose up -d          # cria o banco "estudio_bdd" (usuário e senha de desenvolvimento no docker-compose.yml)
-```
+2. **API** (mesmo terminal):
+   ```bash
+   CORS_ORIGINS=https://${CODESPACE_NAME}-5173.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN} mvn spring-boot:run
+   ```
+   Esperar `Started EstudioBddApplication`. Com o banco vazio, aparece também "Dados fictícios".
 
-Sem Docker: crie um banco `estudio_bdd` e um usuário no PostgreSQL local e informe-os por variáveis de ambiente
-(`DB_URL`, `DB_USER`, `DB_PASSWORD`; veja `.env.example`). Os valores padrão de `application.yml` valem **apenas** para o
-banco local do `docker-compose.yml`; nenhuma credencial real está no repositório.
+3. **Porta 8080 pública:** aba Portas → botão direito na 8080 → Visibilidade da porta → Pública. A SPA chama a API de outra origem, e com a porta privada o navegador bloqueia a chamada. Voltar para Privada ao terminar.
 
-**2. API** (porta 8080)
+4. **SPA** (terminal 2):
+   ```bash
+   cd frontend
+   npm install   # só na primeira vez
+   VITE_API_URL=https://${CODESPACE_NAME}-8080.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}/api npm run dev
+   ```
+5. Abrir a porta **5173** pelo ícone de globo da aba Portas.
 
-```bash
-mvn spring-boot:run
-```
-
-Na primeira execução as tabelas são criadas (`ddl-auto: update`) e os **dados fictícios** são carregados
-(`config/DadosFicticios`). Nas execuções seguintes os dados são mantidos; para recomeçar do zero:
-`docker compose down -v`.
-
-**3. SPA** (porta 5173)
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Abra <http://localhost:5173>, escolha um usuário de demonstração e navegue. A SPA chama a API em
-`http://localhost:8080/api` (mude com `VITE_API_URL`; veja `frontend/.env.example`). A API libera CORS **somente** para
-`http://localhost:5173` (`app.cors.allowed-origins`).
-
-**4. Testes e verificação**
-
-```bash
-mvn test                                  # 3 testes de regra + testes extras + ArchUnit
-./scripts/roteiro-verificacao.sh          # roteiro da seção 13 contra a API no ar (curl)
-```
+Observações: `mvn` roda na raiz do projeto e `npm` roda em `frontend/`. Se a porta 8080 estiver ocupada, há uma API antiga rodando (`pkill -f EstudioBddApplication`). O `vite.config.js` fixa a porta 5173, que é a origem aceita pelo CORS, e libera `*.app.github.dev` em `allowedHosts`.
 
 ## Dados fictícios (carregados na primeira execução)
 
