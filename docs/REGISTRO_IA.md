@@ -56,7 +56,7 @@ Modelo de cada registro:
 - **Mudanças realizadas:** nenhuma no código; só a forma de subir a API e a visibilidade da porta 8080 no Codespace.
 - **Verificação:** o `curl` com a origem da SPA devolveu `Access-Control-Allow-Origin` com o endereço da SPA, e `GET /api/projetos` respondeu com os projetos.
 
-## Interação 4 — API — 12/11 e 14/11/2026 — conduzida por Maria Eduarda — onde fica o banco e como inspecioná-lo
+## Interação 4 — API — 12/11 — conduzida por Maria Eduarda — onde fica o banco e como inspecioná-lo
 
 - **Problema:** saber onde estão os dados fictícios, se era preciso usar um banco externo e como mostrar o banco caso o professor peça.
 - **Ferramenta e prompt:** Claude (Anthropic). Prompts (trechos): "Onde está o banco de dados dos dados ficticios que voce botou no programa? Nao sei se eu deveria usar um banco de dados externo ou não..." e "eu queria olhar no banco de dados pra saber onde achar ele no arquivo caso o processo peça, sabe?".
@@ -74,7 +74,7 @@ Modelo de cada registro:
 - **Mudanças realizadas:** `frontend/vite.config.js`.
 - **Verificação:** a SPA abriu pelo globo da porta 5173, e navegamos Ana → Loja Virtual → Login de cliente com dados vindos da API.
 
-## Interação 6 — SPA — 13/11/2026 — conduzida por Victor — testes do fluxo na tela e evidências do roteiro
+## Interação 6 — SPA — 15/11/2026 — conduzida por Victor — testes do fluxo na tela e evidências do roteiro
 
 - **Problema:** a linha 12 do roteiro exige verificar o fluxo pela SPA e anexar evidências; as linhas 9 e 11 também precisam de evidência guardada.
 - **Ferramenta e prompt:** Claude (Anthropic). Prompt (trecho): "eu tenho que ter print de todos esses testes? botei só 3".
@@ -83,7 +83,7 @@ Modelo de cada registro:
 - **Mudanças realizadas:** coluna "Resultado observado" do `docs/ROTEIRO_VERIFICACAO.md` e arquivos em `docs/evidencias/` (prints `spa-*.jpeg`, `mvn-test.txt`, `persistencia-apos-reinicio.txt`). O código não foi alterado.
 - **Verificação:** comparamos cada resultado com a coluna "Resultado esperado" do roteiro; `mvn test` em 15/11: 20 testes, 0 falhas.
 
-## Interação 7 — SPA — 14/11/2026 — conduzida por Maria Eduarda — sugestão de teste que não aparecia
+## Interação 7 — SPA — 15/11/2026 — conduzida por Maria Eduarda — sugestão de teste que não aparecia
 
 - **Problema:** uma sugestão registrada pela SPA para teste não aparecia, e não sabíamos se tinha sido gravada.
 - **Ferramenta e prompt:** Claude (Anthropic). Prompt (trecho): "nao estou conseguindo ver o banco e a sugestão teste que fiz".
